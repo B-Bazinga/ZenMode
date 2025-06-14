@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZenMode</title>
+  <link rel="stylesheet" href="popup.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12,6 12,12 16,14"/>
+        </svg>
+        <h1>ZenMode</h1>
+      </div>
+      <div class="status" id="sessionStatus">Ready</div>
+    </header>
+
+    <!-- Timer Section -->
+    <section class="timer-section" id="timerSection">
+      <div class="timer-display">
+        <div class="timer-circle">
+          <svg class="progress-ring" width="200" height="200">
+            <circle class="progress-ring-bg" cx="100" cy="100" r="90"/>
+            <circle class="progress-ring-progress" cx="100" cy="100" r="90" id="progressCircle"/>
+          </svg>
+          <div class="timer-text">
+            <div class="time-display" id="timeDisplay">00:00:00</div>
+            <div class="timer-label" id="timerLabel">Set Timer</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timer-controls" id="timerControls">
+        <div class="time-inputs">
+          <div class="input-group">
+            <label>Hours</label>
+            <input type="number" id="hoursInput" min="0" max="24" value="0" class="time-input">
+          </div>
+          <div class="input-group">
+            <label>Minutes</label>
+            <input type="number" id="minutesInput" min="0" max="59" value="25" class="time-input">
+          </div>
+          <div class="input-group">
+            <label>Seconds</label>
+            <input type="number" id="secondsInput" min="0" max="59" value="0" class="time-input">
+          </div>
+        </div>
+
+        <div class="presets">
+          <button class="preset-btn" data-time="1500">25 min</button>
+          <button class="preset-btn" data-time="300">5 min</button>
+          <button class="preset-btn" data-time="3000">50 min</button>
+          <button class="preset-btn" data-time="600">10 min</button>
+        </div>
+
+        <div class="warning-message" id="warningMessage">
+          <div class="warning-icon">⚠️</div>
+          <div class="warning-text">
+            <strong>Point of No Return</strong><br>
+            Timer cannot be paused or stopped once started. Make sure you're ready for an uninterrupted focus session.
+          </div>
+        </div>
+
+        <button class="start-btn" id="startBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5,3 19,12 5,21"/>
+          </svg>
+          Start Focus Session
+        </button>
+      </div>
+
+      <div class="timer-active hidden" id="timerActive">
+        <div class="session-info">
+          <div class="session-type" id="sessionType">Focus Session</div>
+          <div class="emergency-overrides">
+            <span id="overrideCount">5</span> emergency overrides remaining today
+          </div>
+        </div>
+        
+        <div class="session-controls">
+          <button class="emergency-btn" id="emergencyBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+            Emergency Override
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+      <div class="stat-item">
+        <div class="stat-number" id="todayFocus">0h 0m</div>
+        <div class="stat-label">Today</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="weekStreak">0</div>
+        <div class="stat-label">Week Streak</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="totalSessions">0</div>
+        <div class="stat-label">Sessions</div>
+      </div>
+    </section>
+
+    <!-- Navigation -->
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="timer">Timer</button>
+      <button class="nav-tab" data-tab="blocklist">Blocklist</button>
+      <button class="nav-tab" data-tab="achievements">Stats</button>
+    </nav>
+
+    <!-- Blocklist Tab -->
+    <section class="tab-content hidden" id="blocklistTab">
+      <div class="tab-header">
+        <h2>Website Blocklist</h2>
+        <div class="tab-actions">
+          <button class="action-btn" id="importBtn">Import CSV</button>
+          <button class="action-btn" id="exportBtn">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="categories">
+        <div class="category-header">
+          <h3>Categories</h3>
+          <button class="add-btn" id="addCategoryBtn">+ Add Category</button>
+        </div>
+        <div class="category-list" id="categoryList">
+          <!-- Categories will be populated here -->
+        </div>
+      </div>
+
+      <div class="add-site">
+        <h3>Add Website</h3>
+        <div class="input-row">
+          <input type="text" id="siteInput" placeholder="domain.com or domain.com/path/*" class="site-input">
+          <select id="categorySelect" class="category-select">
+            <option value="social">Social Media</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="news">News</option>
+            <option value="shopping">Shopping</option>
+            <option value="custom">Custom</option>
+          </select>
+          <button class="add-site-btn" id="addSiteBtn">Add</button>
+        </div>
+      </div>
+
+      <div class="blocked-sites" id="blockedSites">
+        <!-- Blocked sites will be populated here -->
+      </div>
+    </section>
+
+    <!-- Achievements Tab -->
+    <section class="tab-content hidden" id="achievementsTab">
+      <div class="tab-header">
+        <h2>Focus Statistics</h2>
+      </div>
+
+      <div class="achievements-grid">
+        <div class="achievement-card">
+          <div class="achievement-icon">🎯</div>
+          <div class="achievement-info">
+            <div class="achievement-title">Focus Master</div>
+            <div class="achievement-desc">Complete 10 uninterrupted sessions</div>
+            <div class="achievement-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 60%"></div>
+              </div>
+              <span>6/10</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="achievement-card">
+          <div class="achievement-icon">🔥</div>
+          <div class="achievement-info">
+            <div class="achievement-title">Streak Warrior</div>
+            <div class="achievement-desc">Maintain 7-day focus streak</div>
+            <div class="achievement-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 43%"></div>
+              </div>
+              <span>3/7</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="achievement-card">
+          <div class="achievement-icon">⚡</div>
+          <div class="achievement-info">
+            <div class="achievement-title">Emergency Discipline</div>
+            <div class="achievement-desc">Use less than 3 overrides this week</div>
+            <div class="achievement-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 80%"></div>
+              </div>
+              <span>2/3</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-detailed">
+        <h3>Detailed Statistics</h3>
+        <div class="stat-row">
+          <span>Total Focus Time</span>
+          <span id="totalFocusTime">12h 45m</span>
+        </div>
+        <div class="stat-row">
+          <span>Average Session</span>
+          <span id="avgSession">28m</span>
+        </div>
+        <div class="stat-row">
+          <span>Longest Streak</span>
+          <span id="longestStreak">5 days</span>
+        </div>
+        <div class="stat-row">
+          <span>Emergency Overrides Used</span>
+          <span id="overridesUsed">2/5 today</span>
+        </div>
+        <div class="stat-row">
+          <span>Sites Blocked Today</span>
+          <span id="sitesBlocked">23</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Emergency Override Modal -->
+    <div class="modal hidden" id="emergencyModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Emergency Override</h3>
+          <div class="override-countdown" id="overrideCountdown">30</div>
+        </div>
+        
+        <div class="modal-body">
+          <p>You have <strong id="remainingOverrides">5</strong> emergency overrides remaining today.</p>
+          
+          <div class="reason-input">
+            <label for="overrideReason">Why do you need to override? (minimum 50 characters)</label>
+            <textarea id="overrideReason" placeholder="Describe the urgent reason for accessing blocked sites..." rows="4"></textarea>
+            <div class="char-count"><span id="charCount">0</span>/50</div>
+          </div>
+
+          <div class="modal-warning">
+            <div class="warning-icon">⚠️</div>
+            <div>This will end your current focus session and count against your daily override limit.</div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="cancel-btn" id="cancelOverride">Cancel</button>
+          <button class="confirm-btn disabled" id="confirmOverride">Confirm Override</button>
+        </div>
+      </div>
+    </div>
+
+    <input type="file" id="fileInput" accept=".csv" style="display: none;">
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Blocked - ZenMode</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #171717 100%);
+      color: #fafafa;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 600px;
+      padding: 40px;
+      text-align: center;
+    }
+    
+    .icon {
+      width: 80px;
+      height: 80px;
+      background: #262626;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 32px;
+      font-size: 32px;
+    }
+    
+    h1 {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #fafafa;
+    }
+    
+    .blocked-site {
+      font-size: 18px;
+      color: #dc2626;
+      font-weight: 500;
+      margin-bottom: 24px;
+      padding: 12px 24px;
+      background: rgba(220, 38, 38, 0.1);
+      border: 1px solid rgba(220, 38, 38, 0.2);
+      border-radius: 8px;
+      display: inline-block;
+    }
+    
+    .message {
+      font-size: 16px;
+      color: #a3a3a3;
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+    
+    .timer-info {
+      background: #171717;
+      border: 1px solid #262626;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+    
+    .timer-status {
+      font-size: 14px;
+      color: #a3a3a3;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    
+    .timer-display {
+      font-size: 24px;
+      font-weight: 600;
+      color: #fafafa;
+      margin-bottom: 16px;
+      font-family: 'Inter Tight', monospace;
+    }
+    
+    .overrides-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      font-size: 14px;
+      color: #a3a3a3;
+    }
+    
+    .override-count {
+      background: #dc2626;
+      color: #ffffff;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-weight: 500;
+    }
+    
+    .quote-section {
+      background: #1a1a1a;
+      border: 1px solid #404040;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+    
+    .quote {
+      font-size: 18px;
+      font-style: italic;
+      color: #fafafa;
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+    
+    .quote-author {
+      font-size: 14px;
+      color: #a3a3a3;
+    }
+    
+    .actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+    }
+    
+    .btn-secondary {
+      background: #171717;
+      color: #a3a3a3;
+      border: 1px solid #262626;
+    }
+    
+    .btn-secondary:hover {
+      background: #262626;
+      color: #fafafa;
+    }
+    
+    .btn-danger {
+      background: transparent;
+      color: #dc2626;
+      border: 1px solid #dc2626;
+    }
+    
+    .btn-danger:hover {
+      background: #dc2626;
+      color: #ffffff;
+    }
+    
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid #262626;
+      font-size: 12px;
+      color: #525252;
+    }
+    
+    @media (max-width: 640px) {
+      .container {
+        padding: 24px;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+      
+      .blocked-site {
+        font-size: 16px;
+      }
+      
+      .actions {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">🔒</div>
+    
+    <h1>Site Blocked</h1>
+    
+    <div class="blocked-site" id="blockedSite">Loading...</div>
+    
+    <div class="message">
+      This website is blocked during your focus session. Stay concentrated on your goals and resist the urge to browse distracting content.
+    </div>
+    
+    <div class="timer-info">
+      <div class="timer-status">Focus Session</div>
+      <div class="timer-display" id="timerDisplay">Loading...</div>
+      <div class="overrides-info">
+        <span>Emergency overrides remaining:</span>
+        <span class="override-count" id="overrideCount">5</span>
+      </div>
+    </div>
+    
+    <div class="quote-section">
+      <div class="quote" id="motivationalQuote">
+        "The successful warrior is the average person with laser-like focus."
+      </div>
+      <div class="quote-author" id="quoteAuthor">— Bruce Lee</div>
+    </div>
+    
+    <div class="actions">
+      <button class="btn btn-secondary" id="goBackBtn">
+        ← Go Back
+      </button>
+      <button class="btn btn-danger" id="emergencyBtn">
+        ⚡ Emergency Override
+      </button>
+    </div>
+    
+    <div class="footer">
+      ZenMode • Stay focused, stay productive
+    </div>
+  </div>
+  
+  <script src="blocked.js"></script>
+</body>
+</html>
