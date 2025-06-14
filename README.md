@@ -242,8 +242,9 @@ tiktok.com,entertainment
 
 ```bash
 # Clone the repository
-git clone [repository-url]
-cd zenmode-extension
+cd <YOUR_WORKSPACE>
+git clone https://github.com/B-Bazinga/ZenMode.git
+
 
 # Load in Chrome
 # 1. Go to chrome://extensions/
